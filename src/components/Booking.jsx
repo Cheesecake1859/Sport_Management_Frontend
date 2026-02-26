@@ -78,7 +78,7 @@ export default function Booking() {
       setBookedIntervals([]); 
     }
   }, [selectedDate, bookingDetails]);
- 
+
   // 10-Minute Timer Logic
   useEffect(() => {
     let timer;
@@ -212,13 +212,13 @@ export default function Booking() {
         <div className="arena-section">
           <div className="arena-header">
             <h2>{selectedSport?.Sports_Name} Facilities</h2>
-            <div className="arena-count">{courts.filter(c => c.Sports_ID?._id === selectedSport?._id).length} Arenas Available</div>
+            <div className="arena-count">{courts.filter(c => (c.Sports_ID?._id || c.Sports_ID) === selectedSport?._id).length} Arenas Available</div>
           </div>
           
           <div className="arena-grid">
             {courts
-              .filter(court => court.Sports_ID?._id === selectedSport?._id)
-              .map(court => (
+  .filter(court => (court.Sports_ID?._id || court.Sports_ID) === selectedSport?._id)
+  .map(court => (
                 <div key={court._id} className="arena-card">
                   <div className="arena-card-top">
                     <span className="arena-id">{court.Court_Number}</span>
