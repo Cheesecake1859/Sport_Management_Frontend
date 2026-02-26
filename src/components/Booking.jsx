@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Booking.css';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const timeToMinutes = (timeStr) => {
   if (!timeStr) return 0;
@@ -42,9 +43,9 @@ export default function Booking() {
     const fetchData = async () => {
       try {
         const [sportsRes, courtsRes, configRes] = await Promise.all([
-          fetch('http://localhost:5001/api/sports'),
-          fetch('http://localhost:5001/api/courts'),
-          fetch('http://localhost:5001/api/admin/config') // NEW: Fetch Admin Price
+          fetch(`${API_BASE_URL}/api/sports`),
+          fetch(`${API_BASE_URL}/api/courts`),
+          fetch(`${API_BASE_URL}/api/admin/config`) // NEW: Fetch Admin Price
         ]);
         const sportsData = await sportsRes.json();
         const courtsData = await courtsRes.json();
@@ -68,7 +69,7 @@ export default function Booking() {
 
   useEffect(() => {
     if (selectedDate && bookingDetails?._id) {
-      fetch(`http://localhost:5001/api/bookings/court/${bookingDetails._id}/date/${selectedDate}`)
+      fetch(`${API_BASE_URL}/api/bookings/court/${bookingDetails._id}/date/${selectedDate}`)
         .then(res => res.json())
         .then(data => setBookedIntervals(data))
         .catch(err => console.error("Error fetching availability:", err));
@@ -158,7 +159,7 @@ export default function Booking() {
     formData.append('slipImage', slipImage); 
 
     try {
-      const response = await fetch('http://localhost:5001/api/bookings', {
+      const response = await fetch(`${API_BASE_URL}/api/bookings`, {
         method: 'POST',
         body: formData, 
       });
@@ -199,7 +200,7 @@ export default function Booking() {
                 onClick={() => setSelectedSport(sport)}
               >
                 <div className="pill-icon">
-                  <img src={`http://localhost:5001/uploads/sports/${sport.Sports_Image}`} alt="" />
+                  <img src={`${API_BASE_URL}/uploads/sports/${sport.Sports_Image}`} alt="" />
                 </div>
                 <span>{sport.Sports_Name}</span>
               </button>

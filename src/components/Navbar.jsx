@@ -6,16 +6,15 @@ import './Navbar.css';
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    } else {
-      setUser(null);
-    }
+    setUser(savedUser ? JSON.parse(savedUser) : null);
   }, [location]);
 
   // NEW: Handle clicking outside to close the menu
@@ -96,7 +95,7 @@ export default function Navbar() {
               {/* FIXED: Added onClick and toggleDropdown here */}
               <div className="profile-trigger" onClick={toggleDropdown}>
                 {user.Profile_Image ? (
-                  <img src={`http://localhost:5001/uploads/profiles/${user.Profile_Image}`} alt="Profile" className="avatar-img" />
+                  <img src={`${API_BASE_URL}/uploads/profiles/${user.Profile_Image}`} alt="Profile" className="avatar-img" />
                 ) : (
                   <div className="avatar-placeholder">{user.User_Name.charAt(0).toUpperCase()}</div>
                 )}

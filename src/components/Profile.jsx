@@ -6,6 +6,7 @@ const AVAILABLE_SPORTS = ['Football', 'Basketball', 'Tennis', 'Badminton', 'Voll
 export default function Profile() {
   const currentUser = JSON.parse(localStorage.getItem('user'));
   const [loading, setLoading] = useState(true);
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
   
   const [formData, setFormData] = useState({
     User_Name: '',
@@ -22,9 +23,9 @@ export default function Profile() {
   useEffect(() => {
     if (currentUser?.id) {
       // SMART FETCH: Determine which endpoint to call based on role
-      let endpoint = `http://localhost:5001/api/users/${currentUser.id}`;
-      if (currentUser.role === 'staff') endpoint = `http://localhost:5001/api/staff`; // You'll need a GET /api/staff/:id if you want to pre-fill
-      if (currentUser.role === 'admin') endpoint = `http://localhost:5001/api/admin/config`; // Reusing your config for admin
+      let endpoint = `${API_BASE_URL}/api/users/${currentUser.id}`;
+      if (currentUser.role === 'staff') endpoint = `${API_BASE_URL}/api/staff`; // You'll need a GET /api/staff/:id if you want to pre-fill
+      if (currentUser.role === 'admin') endpoint = `${API_BASE_URL}/api/admin/config`; // Reusing your config for admin
       
       // For simplicity, we can just pre-fill from localStorage to save a database call!
       setFormData(prev => ({
@@ -35,7 +36,7 @@ export default function Profile() {
       
       // If it's a normal user, fetch the extra details (Interests, Picture)
       if (currentUser.role === 'user') {
-        fetch(`http://localhost:5001/api/users/${currentUser.id}`)
+        fetch(`${API_BASE_URL}/api/users/${currentUser.id}`)
           .then(res => res.json())
           .then(data => {
             setFormData(prev => ({
@@ -45,7 +46,7 @@ export default function Profile() {
               Interests: data.Interests || []
             }));
             if (data.Profile_Picture) {
-              setImagePreview(`http://localhost:5001/uploads/profiles/${data.Profile_Picture}`);
+              setImagePreview(`${API_BASE_URL}/uploads/profiles/${data.Profile_Picture}`);
             }
             setLoading(false);
           });
@@ -91,7 +92,7 @@ export default function Profile() {
         dataToSend.append('Interests', JSON.stringify(formData.Interests));
         if (formData.Profile_Picture) dataToSend.append('profileImage', formData.Profile_Picture);
 
-        response = await fetch(`http://localhost:5001/api/users/${currentUser.id}`, {
+        response = await fetch(`${API_BASE_URL}/api/users/${currentUser.id}`, {
           method: 'PUT',
           body: dataToSend, 
         });
@@ -99,7 +100,7 @@ export default function Profile() {
       // IF STAFF OR ADMIN (Uses JSON, no images)
       else {
         const endpointRole = currentUser.role === 'admin' ? 'admin' : 'staff';
-        response = await fetch(`http://localhost:5001/api/${endpointRole}/${currentUser.id}`, {
+        response = await fetch(`${API_BASE_URL}/api/${endpointRole}/${currentUser.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

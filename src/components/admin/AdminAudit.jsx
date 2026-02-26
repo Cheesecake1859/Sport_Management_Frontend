@@ -4,10 +4,11 @@ import './AdminAudit.css';
 export default function AdminAudit() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     // Fetching from the backend route that populates Staff and Court details
-    fetch('http://localhost:5001/api/admin/audit-log')
+    fetch(`${API_BASE_URL}/api/admin/audit-log`)
       .then(res => res.json())
       .then(data => {
         setLogs(data);

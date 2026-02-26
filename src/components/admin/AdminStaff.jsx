@@ -1,12 +1,14 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import './AdminStaff.css'; // Ensure you create this file
 
 export default function AdminStaff() {
   const [staffs, setStaffs] = useState([]);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const API_BASE_URL = import.meta.env.VITE_API_URL;
 
   const fetchStaff = () => {
-    fetch('http://localhost:5001/api/admin/staff')
+    fetch(`${API_BASE_URL}/api/admin/staff`)
       .then(res => res.json())
       .then(setStaffs)
       .catch(err => console.error("Error fetching staff:", err));
@@ -17,7 +19,7 @@ export default function AdminStaff() {
   const handleAddStaff = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5001/api/staff', {
+      const res = await fetch('`${API_BASE_URL}/api/staff', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -38,7 +40,7 @@ export default function AdminStaff() {
 
   const deleteStaff = async (id) => {
     if (window.confirm("Are you sure you want to remove this staff member?")) {
-      await fetch(`http://localhost:5001/api/admin/staff/${id}`, { method: 'DELETE' });
+      await fetch(`${API_BASE_URL}/api/admin/staff/${id}`, { method: 'DELETE' });
       fetchStaff();
     }
   };

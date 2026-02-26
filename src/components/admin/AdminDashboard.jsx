@@ -8,10 +8,11 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [currentRate, setCurrentRate] = useState(0);
 const [newRate, setNewRate] = useState('');
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
   // Fetch Analytics (Your existing code)
-  fetch('http://localhost:5001/api/admin/analytics')
+  fetch(`${API_BASE_URL}/api/admin/analytics`)
     .then(res => res.json())
     .then(data => {
       setStats(data);
@@ -19,7 +20,7 @@ const [newRate, setNewRate] = useState('');
     });
 
   // NEW: Fetch Current Price Configuration
-  fetch('http://localhost:5001/api/admin/config')
+  fetch(`${API_BASE_URL}/api/admin/config`)
     .then(res => res.json())
     .then(data => {
       if (data && data.Hourly_Rate) {
@@ -34,7 +35,7 @@ const handlePriceUpdate = async (e) => {
   if (!newRate || newRate <= 0) return alert("Please enter a valid rate.");
 
   try {
-    const response = await fetch('http://localhost:5001/api/admin/config', {
+    const response = await fetch('`${API_BASE_URL}/api/admin/config', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ Hourly_Rate: Number(newRate) })
