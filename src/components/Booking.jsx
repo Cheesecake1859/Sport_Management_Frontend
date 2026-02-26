@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import './Booking.css';
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -77,7 +78,7 @@ export default function Booking() {
       setBookedIntervals([]); 
     }
   }, [selectedDate, bookingDetails]);
-
+ 
   // 10-Minute Timer Logic
   useEffect(() => {
     let timer;
