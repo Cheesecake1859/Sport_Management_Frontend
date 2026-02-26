@@ -65,7 +65,9 @@ export default function Register() {
       dataToSend.append('Phone_Number', formData.Phone_Number);
       
       // 3. Stringify the Interests array (FormData only sends strings/blobs)
-      dataToSend.append('Interests', JSON.stringify(formData.Interests));
+      formData.Interests.forEach((sport) => {
+  dataToSend.append('Interests', sport);
+});
 
       // 4. Append the image file if it exists
       if (formData.Profile_Picture) {
@@ -74,7 +76,7 @@ export default function Register() {
 
       // 5. Send request WITHOUT the 'Content-Type' header 
       // (The browser will automatically set the boundary for FormData)
-      const response = await fetch('http://localhost:5001/api/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         body: dataToSend, 
       });
